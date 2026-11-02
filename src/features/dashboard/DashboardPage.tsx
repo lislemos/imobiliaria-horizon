@@ -42,7 +42,7 @@ export function DashboardPage({
         <div className="dash-hero__content">
           <h1>Olá, Camila</h1>
           <p>{summarize(clients)}</p>
-          <Button icon="plus" onClick={() => go('new')}>
+          <Button icon="plus" onClick={() => go('atendente-cadastrar')}>
             Cadastrar cliente
           </Button>
         </div>
@@ -66,7 +66,7 @@ export function DashboardPage({
         </div>
       ) : (
         <section className="card">
-          <EmptyState search={false} onNew={() => go('new')} />
+          <EmptyState search={false} onNew={() => go('atendente-cadastrar')} />
         </section>
       )}
     </>

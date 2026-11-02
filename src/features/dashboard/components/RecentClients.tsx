@@ -21,7 +21,7 @@ export function RecentClients({ clients, view, go }: RecentClientsProps) {
         <h2 id="recent-title">
           Últimos cadastros <span className="bento-chip">{recent.length}</span>
         </h2>
-        <button className="text-button" onClick={() => go('new')}>
+        <button className="text-button" onClick={() => go('atendente-cadastrar')}>
           <Icon name="plus" size={15} />
           Novo
         </button>

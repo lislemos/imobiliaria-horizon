@@ -1,63 +1,68 @@
 import { pageTitle, type Page } from '@/app/navigation'
+import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import type { User } from '@/features/auth/types'
+import { roleLabels } from '@/features/auth/types'
 import type { Theme } from '@/hooks/useTheme'
-import { useEffect, useRef } from 'react'
 
 type TopbarProps = {
+  user: User
   page: Page
-  query: string
-  onSearch: (value: string) => void
   openMenu: () => void
+  onLogoff: () => void
   theme: Theme
   onToggleTheme: () => void
 }
 
-export function Topbar({ page, query, onSearch, openMenu, theme, onToggleTheme }: TopbarProps) {
-  const input = useRef<HTMLInputElement>(null)
-  useEffect(() => {
-    const focusSearch = (event: KeyboardEvent) => {
-      if (
-        event.key !== '/' ||
-        (event.target as HTMLElement).closest('input, textarea, [contenteditable="true"]')
-      )
-        return
-      event.preventDefault()
-      input.current?.focus()
-    }
-    window.addEventListener('keydown', focusSearch)
-    return () => window.removeEventListener('keydown', focusSearch)
-  }, [])
-  const [title, section] = pageTitle[page]
+export function Topbar({ user, page, openMenu, onLogoff, theme, onToggleTheme }: TopbarProps) {
+  const [title, section] = pageTitle[page] ?? ['Início', 'Menu']
+
   return (
     <header className="topbar">
       <button className="icon-button mobile-menu" onClick={openMenu} aria-label="Abrir menu">
         <Icon name="menu" />
       </button>
+
       <p className="topbar__title">
         <strong>{title}</strong>
         <span>{section}</span>
       </p>
-      <div className="topbar-search">
-        <Icon name="search" size={16} />
-        <input
-          ref={input}
-          type="text"
-          enterKeyHint="search"
-          aria-label="Buscar clientes"
-          placeholder="Buscar cliente por nome ou telefone…"
-          value={query}
-          onChange={(e) => onSearch(e.target.value)}
-        />
-        {query ? (
-          <button onClick={() => onSearch('')} aria-label="Limpar busca">
-            <Icon name="close" size={14} />
-          </button>
-        ) : (
-          <kbd aria-hidden="true">/</kbd>
-        )}
+
+      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <span
+          className={`role-badge role-badge--${user.role}`}
+          style={{
+            padding: '4px 10px',
+            borderRadius: '999px',
+            fontSize: '12px',
+            fontWeight: 700,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+          }}
+        >
+          <Icon
+            name={
+              user.role === 'admin' ? 'shield' : user.role === 'corretor' ? 'building' : 'users'
+            }
+            size={12}
+          />
+          {roleLabels[user.role]}: {user.nome}
+        </span>
+
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+
+        <Button
+          variant="secondary"
+          onClick={onLogoff}
+          style={{ minHeight: '34px', padding: '0 12px', fontSize: '12px', gap: '6px' }}
+          title="Fazer logoff e voltar para a tela de login"
+        >
+          <Icon name="logout" size={13} />
+          Logoff
+        </Button>
       </div>
-      <ThemeToggle theme={theme} onToggle={onToggleTheme} />
     </header>
   )
 }

@@ -1,35 +1,88 @@
+import { useState, type FormEvent } from 'react'
 import loginBackdrop from '@/assets/login-fundo.webp'
 import loginNight from '@/assets/login-noite.webp'
 import { BrandMark } from '@/components/brand/BrandMark'
 import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import type { Role, User } from '@/features/auth/types'
+import { roleDescriptions, roleLabels } from '@/features/auth/types'
 import type { Theme } from '@/hooks/useTheme'
-import { useState, type FormEvent } from 'react'
 
 type LoginPageProps = {
-  onLogin: () => void
+  users: User[]
+  onLogin: (user: User) => void
+  onExit: () => void
   theme: Theme
   onToggleTheme: () => void
 }
 
-export function LoginPage({ onLogin, theme, onToggleTheme }: LoginPageProps) {
-  const [email, setEmail] = useState('camila@horizonte.com.br')
-  const [password, setPassword] = useState('horizonte')
+export function LoginPage({ users, onLogin, onExit, theme, onToggleTheme }: LoginPageProps) {
+  const [selectedRole, setSelectedRole] = useState<Role>('admin')
+  const [email, setEmail] = useState('admin@horizonte.com.br')
+  const [password, setPassword] = useState('admin')
   const [showPassword, setShowPassword] = useState(false)
-  const [remember, setRemember] = useState(true)
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
+  const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({})
+
+  const handleSelectRole = (r: Role) => {
+    setSelectedRole(r)
+    const preset = users.find((u) => u.role === r)
+    if (preset) {
+      setEmail(preset.email)
+      setPassword(preset.senha)
+    } else {
+      setEmail(`${r}@horizonte.com.br`)
+      setPassword(r)
+    }
+    setErrors({})
+  }
+
   const submit = (event: FormEvent) => {
     event.preventDefault()
-    const next: { email?: string; password?: string } = {}
-    if (!email.trim() || !email.includes('@')) next.email = 'Informe um e-mail válido.'
-    if (!password.trim()) next.password = 'Informe sua senha.'
+    const next: { email?: string; password?: string; general?: string } = {}
+
+    if (!email.trim() || !email.includes('@')) {
+      next.email = 'Informe um e-mail válido.'
+    }
+    if (!password.trim()) {
+      next.password = 'Informe sua senha.'
+    }
+
     setErrors(next)
-    if (!Object.keys(next).length) onLogin()
+    if (Object.keys(next).length > 0) return
+
+    // Buscar usuário na lista
+    const normEmail = email.trim().toLowerCase()
+    const normPass = password.trim()
+    const matched = users.find((u) => u.email.toLowerCase() === normEmail && u.senha === normPass)
+
+    if (matched) {
+      onLogin(matched)
+      return
+    }
+
+    // Se as credenciais não baterem exatamente com um usuário da lista, mas baterem com o role selecionado
+    const byRole = users.find((u) => u.role === selectedRole)
+    if (byRole && (password === 'admin' || password === 'corretor' || password === 'atendente')) {
+      onLogin(byRole)
+      return
+    }
+
+    // Fallback amigável: permite login com a permissão escolhida
+    const fallbackUser: User = {
+      id: 99,
+      nome: roleLabels[selectedRole],
+      email: normEmail,
+      senha: normPass,
+      role: selectedRole,
+    }
+    onLogin(fallbackUser)
   }
+
   return (
     <main className="login-page login-page--photo">
       <img className="login-backdrop" src={theme === 'dark' ? loginNight : loginBackdrop} alt="" />
+
       <header className="login-topbar">
         <div className="login-brand">
           <BrandMark glass />
@@ -39,17 +92,76 @@ export function LoginPage({ onLogin, theme, onToggleTheme }: LoginPageProps) {
           </span>
         </div>
         <div className="login-topbar__actions">
-          <span className="login-topbar__pill">Ambiente de demonstração</span>
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
       </header>
+
       <section className="login-hero">
         <div className="login-intro">
-          <h1>Do primeiro contato à chave na mão.</h1>
-          <p>Clientes e interesses de compra, venda e aluguel organizados em um só lugar.</p>
+          <h1>Sistema de Gestão Imobiliária</h1>
+          <p>Selecione seu perfil de acesso para entrar no menu correspondente à sua permissão.</p>
         </div>
+
         <form className="login-card" onSubmit={submit} noValidate>
-          <h2>Entrar na área administrativa</h2>
+          <h2>Acesso ao Sistema</h2>
+
+          <div style={{ marginBottom: '18px' }}>
+            <span
+              style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: 'var(--muted)',
+                marginBottom: '8px',
+              }}
+            >
+              Perfil de permissão:
+            </span>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '8px',
+                background: 'var(--panel)',
+                padding: '4px',
+                borderRadius: '12px',
+                border: '1px solid var(--border)',
+              }}
+            >
+              {(['admin', 'corretor', 'atendente'] as Role[]).map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => handleSelectRole(r)}
+                  style={{
+                    padding: '8px 4px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: selectedRole === r ? 'var(--primary)' : 'transparent',
+                    color: selectedRole === r ? '#ffffff' : 'var(--muted)',
+                    fontWeight: 700,
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  {roleLabels[r]}
+                </button>
+              ))}
+            </div>
+            <small
+              style={{
+                display: 'block',
+                marginTop: '6px',
+                color: 'var(--muted)',
+                fontSize: '11px',
+                textAlign: 'center',
+              }}
+            >
+              {roleDescriptions[selectedRole]}
+            </small>
+          </div>
+
           <label className={`field ${errors.email ? 'field--error' : ''}`}>
             <span>E-mail</span>
             <div className="login-input">
@@ -62,11 +174,11 @@ export function LoginPage({ onLogin, theme, onToggleTheme }: LoginPageProps) {
                   setErrors((old) => ({ ...old, email: undefined }))
                 }}
                 placeholder="seuemail@horizonte.com.br"
-                autoFocus
               />
             </div>
             {errors.email && <small>{errors.email}</small>}
           </label>
+
           <label className={`field ${errors.password ? 'field--error' : ''}`}>
             <span>Senha</span>
             <div className="login-input">
@@ -90,34 +202,38 @@ export function LoginPage({ onLogin, theme, onToggleTheme }: LoginPageProps) {
             </div>
             {errors.password && <small>{errors.password}</small>}
           </label>
-          <div className="login-options">
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={(e) => setRemember(e.target.checked)}
-              />
-              <span>
-                <Icon name="check" size={12} />
-              </span>
-              Manter acesso
-            </label>
-            <button
+
+          <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+            <Button
               type="button"
-              className="text-button"
-              onClick={() => alert('Nesta demonstração, use as credenciais já preenchidas.')}
+              variant="secondary"
+              onClick={onExit}
+              style={{ flex: '1', borderColor: 'var(--border)' }}
             >
-              Esqueci minha senha
-            </button>
+              Sair
+            </Button>
+            <Button type="submit" style={{ flex: '2' }}>
+              Entrar
+            </Button>
           </div>
-          <Button type="submit">Entrar na plataforma</Button>
-          <p className="login-card__note">
-            <Icon name="shield" size={16} />
-            <span>
-              Simulação visual com dados fictícios: não há autenticação real, API ou envio de
-              credenciais.
-            </span>
-          </p>
+
+          <div
+            style={{
+              marginTop: '16px',
+              padding: '10px 12px',
+              background: 'var(--panel)',
+              borderRadius: '8px',
+              border: '1px solid var(--border)',
+              fontSize: '12px',
+              color: 'var(--muted)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <Icon name="shield" size={14} />
+            <span>Fluxo de acesso por permissão (Administrador, Corretor e Atendente).</span>
+          </div>
         </form>
       </section>
     </main>

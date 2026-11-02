@@ -50,7 +50,7 @@ export function ClientsPage({
         title={filter ? interestGroup[filter] : 'Clientes'}
         description="Consulte, organize e mantenha sua base sempre atualizada."
         action={
-          <Button icon="plus" onClick={() => go('new')}>
+          <Button icon="plus" onClick={() => go('atendente-cadastrar')}>
             Novo cliente
           </Button>
         }
@@ -71,7 +71,11 @@ export function ClientsPage({
         {filtered.length ? (
           <ClientTable clients={filtered} onView={view} onEdit={edit} onDelete={remove} />
         ) : (
-          <EmptyState search={Boolean(query || filter)} onNew={() => go('new')} onClear={clear} />
+          <EmptyState
+            search={Boolean(query || filter)}
+            onNew={() => go('atendente-cadastrar')}
+            onClear={clear}
+          />
         )}
       </section>
     </>

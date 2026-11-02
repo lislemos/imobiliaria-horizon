@@ -240,3 +240,76 @@ h1 {
     transform: translateY(10px);
   }
 }
+
+/* Perfis de permissão */
+.side-role-badge {
+  padding: 0 16px 12px;
+}
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.role-badge--admin {
+  background: rgba(147, 51, 234, 0.12);
+  color: #9333ea;
+  border: 1px solid rgba(147, 51, 234, 0.25);
+}
+.role-badge--corretor {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+.role-badge--atendente {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.role-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.role-option-card {
+  position: relative;
+  display: block;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  background: var(--panel);
+  transition: all 0.2s ease;
+}
+.role-option-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+.role-option-card input {
+  position: absolute;
+  opacity: 0;
+}
+.role-option-card--selected {
+  border-color: var(--primary);
+  background: var(--primary-subtle);
+  box-shadow: 0 4px 12px rgba(31, 99, 214, 0.12);
+}
+.role-option-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--heading);
+  margin-bottom: 6px;
+}
+.role-option-card__content p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+  margin: 0;
+}
