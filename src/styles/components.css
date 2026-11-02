@@ -241,6 +241,18 @@ h1 {
   }
 }
 
+/* Estilo ativo para navegação do Sidebar */
+.nav-i[aria-current='page'] {
+  color: var(--heading) !important;
+  font-weight: 700 !important;
+  background: var(--nav-layer) !important;
+  box-shadow: 0 1px 3px rgba(31, 62, 110, 0.08) !important;
+}
+.nav-i[aria-current='page'] > svg {
+  opacity: 1 !important;
+  color: var(--primary) !important;
+}
+
 /* Perfis de permissão */
 .side-role-badge {
   padding: 0 16px 12px;

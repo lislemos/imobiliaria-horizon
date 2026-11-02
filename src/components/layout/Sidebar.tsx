@@ -33,10 +33,9 @@ export function Sidebar({
   collapsed,
   toggleCollapsed,
 }: SidebarProps) {
-  // Definição estrita dos itens de menu conforme a permissão solicitada
   const menuConfig: Record<User['role'], { title: string; items: MenuItem[] }> = {
     admin: {
-      title: 'MENU ADMINISTRADOR',
+      title: 'Menu Administrador',
       items: [
         { id: 'admin-cadastrar', label: 'Cadastrar usuário', icon: 'plus' },
         { id: 'admin-consultar', label: 'Consultar usuário', icon: 'search' },
@@ -44,7 +43,7 @@ export function Sidebar({
       ],
     },
     corretor: {
-      title: 'MENU CORRETOR',
+      title: 'Menu Corretor',
       items: [
         { id: 'corretor-cadastrar', label: 'Cadastrar imóvel', icon: 'plus' },
         { id: 'corretor-consultar', label: 'Consultar imóvel', icon: 'building' },
@@ -52,7 +51,7 @@ export function Sidebar({
       ],
     },
     atendente: {
-      title: 'MENU ATENDENTE',
+      title: 'Menu Atendente',
       items: [
         { id: 'atendente-cadastrar', label: 'Cadastrar cliente', icon: 'plus' },
         { id: 'atendente-listar', label: 'Listar clientes', icon: 'users' },
@@ -65,88 +64,76 @@ export function Sidebar({
 
   const currentMenu = menuConfig[user.role]
 
-  const handleNavigate = (targetPage: Page) => {
+  const pick = (targetPage: Page) => () => {
     go(targetPage)
     close()
   }
 
   return (
     <>
-      {open && <div className="side-overlay" onClick={close} />}
+      {open && <button className="sidebar-scrim" onClick={close} aria-label="Fechar menu" />}
 
-      <aside className={`side ${open ? 'side--open' : ''}`}>
-        <div className="side-brand">
-          <div className="brand-lockup">
-            <BrandMark />
-            <span className="brand-text">
-              <strong>Horizonte</strong>
-              <small>Imobiliária</small>
-            </span>
-          </div>
+      <aside className={`sidebar ${open ? 'sidebar--open' : ''}`}>
+        <div className="side-top">
           <button
             type="button"
-            className="side-toggle"
-            onClick={toggleCollapsed}
-            aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
-            title={collapsed ? 'Expandir menu' : 'Recolher menu'}
+            className="side-mark"
+            onClick={pick(currentMenu.items[0].id)}
+            aria-label="Horizonte Imobiliária"
           >
-            <Icon name="chevron" size={16} />
+            <BrandMark />
+            <b>Horizonte</b>
+          </button>
+          <div className="side-city">
+            <span aria-hidden="true" />
+            <span>{roleLabels[user.role]}</span>
+          </div>
+          <button className="icon-button sidebar-close" onClick={close} aria-label="Fechar menu">
+            <Icon name="close" />
           </button>
         </div>
 
-        <div className="side-role-badge">
-          <span className={`role-badge role-badge--${user.role}`}>
-            <Icon
-              name={
-                user.role === 'admin' ? 'shield' : user.role === 'corretor' ? 'building' : 'users'
-              }
-              size={13}
-            />
-            {roleLabels[user.role]}
-          </span>
-        </div>
-
-        <nav className="side-nav">
+        <nav className="side-nav" aria-label={currentMenu.title}>
           <div className="nav-grp">
             <span className="lab">{currentMenu.title}</span>
 
             {currentMenu.items.map((item) => {
-              const active = page === item.id
+              const isCurrent = page === item.id
               return (
                 <button
                   key={item.id}
                   type="button"
-                  className={`nav-leaf ${active ? 'nav-leaf--active' : ''}`}
-                  onClick={() => handleNavigate(item.id)}
+                  className="nav-i"
+                  aria-current={isCurrent ? 'page' : undefined}
+                  aria-label={item.label}
+                  onClick={pick(item.id)}
                   title={item.label}
                 >
                   <Icon name={item.icon} size={16} />
-                  <span>{item.label}</span>
+                  <span className="tx">{item.label}</span>
                 </button>
               )
             })}
           </div>
 
-          <div
-            className="nav-grp"
-            style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid var(--border)' }}
-          >
+          <div className="nav-grp" style={{ marginTop: 'auto', paddingTop: '12px' }}>
             <button
               type="button"
-              className="nav-leaf nav-leaf--logout"
+              className="nav-i"
+              aria-label="Logoff"
               onClick={logout}
               title="Logoff"
               style={{ color: '#ef4444' }}
             >
               <Icon name="logout" size={16} />
-              <span>Logoff</span>
+              <span className="tx">Logoff</span>
             </button>
           </div>
         </nav>
 
         <div className="side-foot">
           <div className="user-menu">
-            <div className="user-i" style={{ cursor: 'default' }}>
+            <div className="user-i" title={`${user.nome} — ${roleLabels[user.role]}`}>
               <Avatar name={user.nome} />
               <span className="who">
                 <b>{user.nome}</b>
@@ -155,6 +142,17 @@ export function Sidebar({
             </div>
           </div>
         </div>
+
+        <button
+          type="button"
+          className="side-toggle"
+          onClick={toggleCollapsed}
+          aria-expanded={!collapsed}
+          aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
+          title={collapsed ? 'Expandir menu' : 'Recolher menu'}
+        >
+          <Icon name="arrow" size={13} />
+        </button>
       </aside>
     </>
   )
