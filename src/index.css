@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+/* A ordem importa: primeiro a base, depois as telas e, por fim, os ajustes. */
+@import './styles/base.css';
+@import './styles/layout.css';
+@import './styles/components.css';
+@import './styles/dashboard.css';
+@import './styles/clients.css';
+@import './styles/auth.css';
+@import './styles/responsive.css';
+@import './styles/dark.css';

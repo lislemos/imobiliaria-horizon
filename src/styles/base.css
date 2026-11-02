@@ -1,0 +1,67 @@
+/* Paleta, valores padrão e acessibilidade. */
+:root {
+  font-family: 'Manrope', sans-serif;
+  font-synthesis: none;
+
+  --hz-sky: #2e7cf6;
+  --hz-sky-ink: #1f63d6;
+  --hz-horizon: #5da9ff;
+  --hz-sun: #ffb89a;
+  --hz-amber: #e0913f;
+  --hz-teal: #2a9d8f;
+  --hz-cream: #ffe7d6;
+  --hz-forest: #1f3e46;
+  --hz-neutral: #e8eef5;
+
+  --background: #f3f6fb;
+  --surface: #ffffff;
+  --surface-muted: #f7f9fc;
+  --text: #24343b;
+  --heading: var(--hz-forest);
+  --muted: #5d6f7c;
+  --border: #dfe7f1;
+  --blue-soft: #e6f0ff;
+  --amber-soft: #fbf0e2;
+  --amber-ink: #8a4d14;
+  --teal-soft: #e1f3ef;
+  --teal-ink: #1d6b62;
+  --slate-soft: #e9eef4;
+  --success: #2b7a6f;
+  --danger: #c2413f;
+  --danger-soft: #fdeceb;
+  --focus-ring: 0 0 0 3px rgba(46, 124, 246, 0.18);
+  --shadow: 0 10px 30px rgba(31, 99, 214, 0.08);
+
+  --ground: linear-gradient(165deg, #dde7f5 0%, #e9eef5 55%, #f2efe8 100%);
+  --sheet-shadow: 0 10px 32px rgba(31, 62, 110, 0.1), 0 1px 3px rgba(31, 62, 110, 0.06);
+  --primary: #1f63d6;
+  --primary-hover: #1a56bd;
+  --card: #f5f7fb;
+  --field: #ffffff;
+  --popover: #ffffff;
+  color-scheme: light;
+  color: var(--text);
+  background: var(--background);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+@layer base {
+  body {
+    min-width: 320px;
+    background: #e4eaf3;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:focus-visible,
+  input:focus-visible,
+  label:not(.field):has(input:focus-visible) {
+    outline: 3px solid rgba(46, 124, 246, 0.35);
+    outline-offset: 2px;
+  }
+}

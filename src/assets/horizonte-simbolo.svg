@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="690" height="555" viewBox="70 100 690 555" role="img" aria-labelledby="title desc">
+  <title id="title">Horizonte — monograma H</title>
+  <desc id="desc">Monograma H geométrico com haste azul à esquerda, haste rosa à direita e ponte arqueada azul-marinho ao centro. Fundo transparente.</desc>
+  <defs>
+    <linearGradient id="haste-azul" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2586E8"/>
+      <stop offset="1" stop-color="#4896E4"/>
+    </linearGradient>
+    <linearGradient id="haste-rosa" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#FFA0AD"/>
+      <stop offset="1" stop-color="#FFAF9E"/>
+    </linearGradient>
+    <linearGradient id="ponte" x1="0" y1="0" x2="1" y2="0.8">
+      <stop offset="0" stop-color="#254C72"/>
+      <stop offset="0.55" stop-color="#3B668D"/>
+      <stop offset="1" stop-color="#7283A5"/>
+    </linearGradient>
+  </defs>
+  <!-- Pilar direito, independente do azul -->
+  <path fill="url(#haste-rosa)" d="M532 256 C532 244 537 239 548 232 C606 196 670 165 729 146 L729 625 C668 546 606 505 532 480 Z"/>
+  <!-- Travessia / novo horizonte -->
+  <path fill="url(#ponte)" d="M97 625 C171 536 247 490 282 479 C397 426 565 460 729 625 L559 625 C541 625 538 598 526 577 C482 503 420 479 363 486 C261 482 170 537 97 625 Z"/>
+  <!-- Pilar esquerdo com encontro orgânico contido -->
+  <path fill="url(#haste-azul)" d="M97 234 C97 214 101 208 116 197 C160 169 223 145 282 132 L282 479 C247 490 171 536 97 625 Z"/>
+</svg>
