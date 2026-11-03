@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
+import os
 import sys
 import webbrowser
 from threading import Timer
@@ -10,7 +11,8 @@ from main3 import CLIENTES, IMOVEIS, USUARIOS, retornaListaJson, salvarListJson,
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:8443"}})
+# Permite chamadas locais e de qualquer origem caso hospedado
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
 @app.route('/api/clientes', methods=['GET'])
@@ -318,15 +320,29 @@ def servir_frontend(path):
         dist = Path(sys.executable).resolve().parent / 'dist'
     else:
         dist = Path(__file__).resolve().parent / 'dist'
+        if not dist.exists():
+            dist = Path(__file__).resolve().parent.parent / 'dist'
 
     arquivo = dist / path
     if path and arquivo.is_file() and arquivo.resolve().is_relative_to(dist.resolve()):
         return send_from_directory(dist, path)
 
-    return send_from_directory(dist, 'index.html')
+    if dist.exists() and (dist / 'index.html').is_file():
+        return send_from_directory(dist, 'index.html')
+
+    return jsonify({
+        'status': 'API Imobiliária Horizonte ativa',
+        'rotas': ['/api/clientes', '/api/imoveis', '/api/usuarios', '/api/login']
+    })
 
 
 if __name__ == '__main__':
-    url = 'http://127.0.0.1:5000'
-    Timer(1.5, lambda: webbrowser.open(url)).start()
-    app.run(host='127.0.0.1', port=5000, debug=False, use_reloader=False)
+    port = int(os.environ.get('PORT', 5000))
+    is_cloud = os.environ.get('RENDER') or os.environ.get('PORT')
+    host = '0.0.0.0' if is_cloud else '127.0.0.1'
+
+    if not is_cloud:
+        url = f'http://{host}:{port}'
+        Timer(1.5, lambda: webbrowser.open(url)).start()
+
+    app.run(host=host, port=port, debug=False, use_reloader=False)
