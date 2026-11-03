@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "username": "berlinda",
+        "password": "aa1234",
+        "direitoAcesso": "corretor"
+    },
+    {
+        "id": 2,
+        "username": "ademir",
+        "password": "aa1234",
+        "direitoAcesso": "adm"
+    },
+    {
+        "id": 5,
+        "nome": "Jurmínia Feldspato",
+        "username": "jurminia",
+        "email": "jurminia@horizonte.com",
+        "password": "aa1234",
+        "direitoAcesso": "atendente",
+        "criadoEm": "02/11/2026"
+    }
+]

@@ -1,0 +1,23 @@
+[
+    {
+        "id": 2,
+        "nome": "Juvenal Pereira Santana",
+        "telefone": "11940028922",
+        "email": "Funkdo@yuji.com.br",
+        "interesse": "compra"
+    },
+    {
+        "id": 4,
+        "nome": "Mario Atrás do Armário",
+        "telefone": "11942491793",
+        "email": "a@a.com",
+        "interesse": "compra"
+    },
+    {
+        "id": 5,
+        "nome": "Joana do Caos",
+        "telefone": "11",
+        "email": "a@a.com",
+        "interesse": "compra"
+    }
+]

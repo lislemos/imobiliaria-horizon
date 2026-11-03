@@ -1,0 +1,18 @@
+[
+    {
+        "id": 2,
+        "codigo": "IMV-002",
+        "titulo": "Casa do Gerosvaldo",
+        "tipo": "casa",
+        "finalidade": "aluguel",
+        "valor": 250.0,
+        "endereco": "Rua dos Bobos, 0",
+        "bairro": "Me Gusta",
+        "cidade": "Gerosvaldo",
+        "areaM2": 80.0,
+        "quartos": 2,
+        "vagas": 1,
+        "descricao": "Casa confortável",
+        "dataCadastro": "02/11/2026"
+    }
+]
